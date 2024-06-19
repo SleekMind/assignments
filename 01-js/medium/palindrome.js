@@ -4,7 +4,32 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  // Convert the string to lowercase to handle case-insensitivity
+  str = str.toLowerCase();
+
+  let i = 0;
+  let j = str.length - 1;
+
+  while (i < j) {
+    // Skip non-alphabetic characters
+    if (!/[a-z]/.test(str[i])) {
+      i++;
+      continue;
+    }
+    if (!/[a-z]/.test(str[j])) {
+      j--;
+      continue;
+    }
+
+    if (str[i] != str[j]) return false; // Mismatch found
+    i++;
+    j--;
+  }
+
+  return true; // String is a palindrome
 }
+
+module.exports = isPalindrome;
+
 
 module.exports = isPalindrome;
