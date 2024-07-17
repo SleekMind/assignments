@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Counter</title>
+</head>
+<body>
+    <div id="counter"></div>
+
+    <script>
+        let count = 0;
+
+        function updateCounter() {
+            count++;
+            document.getElementById('counter').innerText = count;
+            setTimeout(updateCounter, 1000);
+        }
+
+        updateCounter();
+        
+    </script>
+</body>
+</html>

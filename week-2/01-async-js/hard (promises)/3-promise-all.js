@@ -5,19 +5,40 @@
  */
 
 function wait1(t) {
-
+    return new Promise((resolve) => {
+        setTimeout(resolve, t * 1000); // Resolve after t seconds
+    });
 }
 
 function wait2(t) {
-
+    return new Promise((resolve) => {
+        setTimeout(resolve, t * 1000); // Resolve after t seconds
+    });
 }
 
 function wait3(t) {
-
+    return new Promise((resolve) => {
+        setTimeout(resolve, t * 1000); // Resolve after t seconds
+    });
 }
 
 function calculateTime(t1, t2, t3) {
+    const start = Date.now(); // Record the start time
 
+    // Start the promises
+    const promises = [wait1(t1), wait2(t2), wait3(t3)];
+
+    // Use Promise.all to wait for all promises to resolve
+    return Promise.all(promises).then(() => {
+        const end = Date.now(); // Record the end time after all promises have resolved
+        return end - start; // Calculate and return the time taken
+    });
 }
+
+// Usage example: Print the time on screen after it's resolved
+calculateTime(1, 2, 3).then((timeTaken) => {
+    console.log(`Time taken: ${timeTaken} milliseconds`); // Print time taken on console
+});
+
 
 module.exports = calculateTime;
