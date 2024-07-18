@@ -9,17 +9,17 @@ describe('Todo API', () => {
   let createdTodoId;
   let globalServer;
 
-  beforeAll((done) => {
-    if (globalServer) {
-        globalServer.close();
-    }
-    globalServer = server.listen(3000);
-    done()
-  });
+  // beforeAll((done) => {
+  //   if (globalServer) {
+  //       globalServer.close();
+  //   }
+  //   globalServer = server.listen(3000);
+  //   done()
+  // });
 
-  afterAll((done) => {
-    globalServer.close(done);
-  });
+  // afterAll((done) => {
+  //   globalServer.close(done);
+  // });
 
   const todo = {
     title: 'New Todo',
@@ -134,6 +134,7 @@ describe('Todo API', () => {
     req.end();
   });
 
+  
   test('should return 404 for a non-existent todo item', (done) => {
     http.get(`${baseUrl}/todos/${uuidv4()}`, (res) => {
       expect(res.statusCode).toBe(404);
