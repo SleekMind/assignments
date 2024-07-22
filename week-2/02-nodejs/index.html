@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .todo-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .todo-button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .todo-button:hover {
+            background: #218838;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .todo-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .todo-button-edit,
+        .todo-button-delete {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .todo-button-edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .todo-button-edit:hover {
+            background: #0056b3;
+        }
+
+        .todo-button-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .todo-button-delete:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Todo App</h2>
+        <input type="text" id="title" class="todo-input" placeholder="Title">
+        <input type="text" id="description" class="todo-input" placeholder="Description">
+        <button class="todo-button" onclick="addTodo()">Add Todo</button>
+        <ul id="todo-list" class="todo-list"></ul>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/todos';
+
+        // Fetch and display todos on page load
+        window.onload = function () {
+            fetchTodos();
+        };
+
+        async function fetchTodos() {
+            const res = await fetch(apiUrl);
+            const todos = await res.json();
+            const todoList = document.getElementById('todo-list');
+            todoList.innerHTML = '';
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `
+                    <div>
+                        <strong>${todo.title}</strong><br>
+                        <span>${todo.description}</span>
+                    </div>
+                    <div class="todo-actions">
+                        <button class="todo-button-edit" onclick="editTodoPrompt(${todo.id})">Edit</button>
+                        <button class="todo-button-delete" onclick="deleteTodo(${todo.id})">Delete</button>
+                    </div>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        async function addTodo() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description })
+            });
+
+            const newTodo = await res.json();
+            fetchTodos();
+        }
+
+        async function deleteTodo(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            fetchTodos();
+        }
+
+        async function editTodoPrompt(id) {
+            const newTitle = prompt('Enter new title');
+            const newDescription = prompt('Enter new description');
+            if (newTitle && newDescription) {
+                await editTodo(id, newTitle, newDescription);
+            }
+        }
+
+        async function editTodo(id, title, description) {
+            await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description })
+            });
+            fetchTodos();
+        }
+    </script>
+</body>
+
+</html>
